@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Show</title>
+</head>
+<body>
+<p th:text="${user.getFirstName() + ', [' + user.getUserName() + ']'}">VALUE</p>
+
+<div th:if="${data.isEmpty()}">
+    <p>No data</p>
+    <hr/>
+</div>
+
+<div th:if="${!data.isEmpty()}">
+    <hr/>
+    <b>Книги:</b>
+    <br/>
+    <table th:each="dataIter : ${data}">
+        <tr>
+            <td>
+                <p th:text="${dataIter.transcript}"></p>
+                <audio controls>
+                    <source th:src="@{/botinfo/audio/{id}(id=${dataIter.getId()})}" type="audio/ogg"/>
+                </audio>
+            </td>
+        </tr>
+    </table>
+    <hr/>
+</div>
+
+<a th:href="@{/botinfo}">Back</a>
+
+</body>
+</html>
