@@ -8,8 +8,11 @@ import com.google.auth.oauth2.ServiceAccountCredentials;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,10 +22,19 @@ import java.util.List;
 public class GoogleTranscribe {
 
     private static String pathToServiceAccount;
+    static {
+        setPrivateName();
+    }
 
-    @Value("${app.pathtoserviceaccount}")
-    public void setPrivateName(String pathToServiceAccount) {
-        GoogleTranscribe.pathToServiceAccount = pathToServiceAccount;
+
+    public static void setPrivateName() {
+        File file = null;
+        try {
+            file = ResourceUtils.getFile("classpath:serviceaccount.json");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        GoogleTranscribe.pathToServiceAccount = file.getAbsolutePath();
     }
 
     public static String syncRecognizeFile(String fileName) throws Exception {
